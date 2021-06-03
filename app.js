@@ -16,11 +16,6 @@ const shopRoutes = require('./routes/shop');
 //     res.send('<h1>My First Express Assigment !</h1>');
 // });
 
-app.use(bodyParser.urlencoded({extended: false}));
-
-app.use(adminRoutes);
-app.use(shopRoutes);
-
 // app.use('/users', (req, res, next) => {
 //     console.log('Users Page');
 //     res.send('<h1>The Users Pages</h1>');
@@ -36,5 +31,13 @@ app.use(shopRoutes);
 //     res.redirect('/');
 // });
 
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(adminRoutes);
+app.use(shopRoutes);
+
+app.use( (req,res,next) => {
+    res.status(404).send('<h1>Page Not Found</h1>');
+});
 
 app.listen(3000);
