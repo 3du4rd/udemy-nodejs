@@ -11,10 +11,10 @@ router.use('/users', (req, res, next) => {
     res.send('<h1>The Users Pages</h1>');
 });
 
+// /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-    console.log('Add Product');
-    res.sendFile(path.join(rootDir,'views','add-product.html'));
-}); 
+    res.render('add-product', { pageTitle: 'Add Product', path: '/admin/add-product', formsCSS: true, productCSS: true, activeAddProduct: true });
+  });
 
 router.post('/add-product', (req, res, next) => {
     console.log(req.body);
