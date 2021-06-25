@@ -14,4 +14,9 @@ router.get('/playlists', (req, res, next) => {
     res.send('<h1>Playlists Pages</h1>');
 }); 
 
+router.get('/products', (req, res, next) => {
+    console.log('Products Page');
+    res.send('<h1>Products Pages</h1>');
+}); 
+
 exports.routes = router;
