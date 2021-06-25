@@ -13,8 +13,13 @@ router.use('/users', (req, res, next) => {
 
 // /admin/add-product => GET
 router.get('/add-product', (req, res, next) => {
-    res.render('add-product', { pageTitle: 'Add Product', path: '/admin/add-product', formsCSS: true, productCSS: true, activeAddProduct: true });
-  });
+    res.render('add-product', { 
+        pageTitle: 'Add Product (Ejs)', 
+        path: '/admin/add-product', 
+        formsCSS: true, 
+        productCSS: true, 
+        activeAddProduct: true });
+});
 
 router.post('/add-product', (req, res, next) => {
     console.log(req.body);
