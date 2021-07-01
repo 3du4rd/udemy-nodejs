@@ -19,6 +19,12 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getIndex = (req, res, next) => {
     Product.fetchAll(products => {
         res.render('shop/index', {
@@ -29,6 +35,12 @@ exports.getIndex = (req, res, next) => {
     });
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getCart= (req, res, next) => {
     res.render('shop/cart', {
         pageTitle: 'Your Cart',
@@ -36,6 +48,12 @@ exports.getCart= (req, res, next) => {
     });
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
