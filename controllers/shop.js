@@ -19,6 +19,13 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
+exports.getProduct = (req, res, next) => {
+    const productId = req.params.productId;
+    console.log(productId);
+    res.redirect('/');
+};
+
+
 /**
  * 
  * @param {*} req 
