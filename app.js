@@ -3,7 +3,7 @@ const path = require('path');
 const express = require ('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/error');
-
+const sequelize = require('./util/database');
  
 const PORT = process.env.PORT || 5000;
 
@@ -26,4 +26,12 @@ app.use('/api',apiRoutes.routes);
 
 app.use(errorController.get404);
 
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+sequelize.sync()
+.then(result => {
+    //console.log(result);
+    app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+})
+.catch(err => {
+    console.error(err);
+});
+
