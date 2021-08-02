@@ -28,14 +28,19 @@ exports.postAddProduct = (request, response, next) => {
     const description = request.body.description;
     const price = request.body.price;
 
-    const product = new Product(null, title, imageUrl, description, price);
-    product.save()
-        .then((res) => {
-            console.log('Se adiciono el producto exitosamente: '+ res.rows[0]);
-            response.redirect('/');
-        })
-        .catch(e =>
-            console.error(e.stack));
+    Product.create({
+        title: title,
+        price: price,
+        imageUrl: imageUrl,
+        description: description
+    })
+    .then(result=>{
+        console.log(result);
+        response.redirect('/');
+    })
+    .catch(err =>{
+        console.error(err.stack);
+    });
 };
 
 

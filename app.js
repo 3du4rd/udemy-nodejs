@@ -26,7 +26,7 @@ app.use('/api',apiRoutes.routes);
 
 app.use(errorController.get404);
 
-sequelize.sync()
+sequelize.sync({ alter: true })
 .then(result => {
     //console.log(result);
     app.listen(PORT, () => console.log(`Listening on ${PORT}`));
