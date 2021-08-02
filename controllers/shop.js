@@ -7,30 +7,39 @@ const Cart = require('../models/cart')
  * @param {*} res 
  * @param {*} next 
  */
-exports.getProducts = (req, res, next) => {
-    Product.fetchAll(products => {
-        res.render('shop/product-list', {
-            prods: products,
-            pageTitle: 'Shop (Ejs)',
-            path: '/',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCSS: true
-          });
-    });
+exports.getProducts = (request, response, next) => {
+
+  Product.fetchAll()
+    .then((res) => {
+      console.log(res);
+      response.render('shop/product-list', {
+        prods: res.rows,
+        pageTitle: 'Shop - Product List (from DB)',
+        path: '/',
+        hasProducts: res.rows > 0,
+        activeShop: true,
+        productCSS: true
+      });
+    })
+    .catch(e =>
+      console.error(e.stack));
 };
 
-exports.getProduct = (req, res, next) => {
-    const productId = req.params.productId;
-    Product.findById(productId, product => {
-        console.log(product);
-        res.render('shop/product-detail', {
-            product: product,
-            pageTitle: 'My Shop - '+ product.title,
-            path: '/products'
-        });
-    });
-    console.log(productId);    
+exports.getProduct = (request, response, next) => {
+    const productId = request.params.productId;
+    console.log('getProduct '+productId);
+    Product.findById(productId)
+    .then((res) => {
+      const product = res.rows[0];
+      console.log(product);
+      response.render('shop/product-detail', {
+        product: product,
+        pageTitle: 'My Shop - '+ product.title,
+        path: '/products'
+      });
+    })
+    .catch(e =>
+      console.error(e.stack));
 };
 
 
@@ -40,14 +49,18 @@ exports.getProduct = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.getIndex = (req, res, next) => {
-    Product.fetchAll(products => {
-        res.render('shop/index', {
-            prods: products,
-            pageTitle: 'Shop Index',
-            path: '/'
-          });
-    });
+exports.getIndex = (request, response, next) => {
+  Product.fetchAll()
+  .then(res => {
+    response.render('shop/index', {
+      prods: res.rows,
+      pageTitle: 'Shop Index (from Database)',
+      path: '/'
+    });    
+  })
+  .catch(e => 
+    console.error(e.stack));
+
 };
 
 /**

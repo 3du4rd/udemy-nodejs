@@ -20,17 +20,22 @@ const Product = require('../models/product')
  * @param {*} res 
  * @param {*} next 
  */
-exports.postAddProduct = (req, res, next) => {
-    console.log(req.body);
+exports.postAddProduct = (request, response, next) => {
+    console.log(request.body);
 
-    const title = req.body.title;
-    const imageUrl = req.body.imageUrl;
-    const description = req.body.description;
-    const price = req.body.price;
+    const title = request.body.title;
+    const imageUrl = request.body.imageUrl;
+    const description = request.body.description;
+    const price = request.body.price;
 
-    const product = new Product(null,title, imageUrl, description, price);    
-    product.save();
-    res.redirect('/');
+    const product = new Product(null, title, imageUrl, description, price);
+    product.save()
+        .then((res) => {
+            console.log('Se adiciono el producto exitosamente: '+ res.rows[0]);
+            response.redirect('/');
+        })
+        .catch(e =>
+            console.error(e.stack));
 };
 
 
