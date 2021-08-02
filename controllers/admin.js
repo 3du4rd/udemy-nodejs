@@ -43,24 +43,34 @@ exports.postAddProduct = (request, response, next) => {
     });
 };
 
-
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 exports.getEditProduct = (req, res, next) => {
     const editMode = new Boolean(req.query.edit);
     if (!editMode){
         return res.redirect('/');
     }
     const prodId = req.params.productId;
-    Product.findById( prodId, product => {
-        if(!product){
-            return res.redirect('/');
-        }
-        res.render('admin/edit-product', {
-            pageTitle: 'Edit Product (Ejs)',
-            path: '/admin/edit-product',
-            editing: editMode,
-            product: product
-        });
-    });    
+
+    Product.findByPk(prodId)
+        .then(product => {
+            if (!product) {
+                return res.redirect('/');
+            }
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit Product (Ejs)',
+                path: '/admin/edit-product',
+                editing: editMode,
+                product: product
+            });
+        })
+        .catch(e =>
+            console.error(e.stack));
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -69,16 +79,23 @@ exports.postEditProduct = (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
-    const updatedProduct = new Product(
-      prodId,
-      updatedTitle,
-      updatedImageUrl,
-      updatedDesc,
-      updatedPrice
-    );
-    updatedProduct.save();
+
+    Product.findByPk(prodId)
+        .then(product => {
+            product.title = updatedTitle;
+            product.price = updatedPrice;
+            product.imageUrl = updatedImageUrl;
+            product.description = updatedDesc;
+            return product.save();
+        })
+        .then(result => {
+            console.log('Producto actualizado exitosamente!');
+        })
+        .catch(e =>
+            console.error(e.stack));
+            
     res.redirect('/admin/products');
-  };
+};
 
   /**
    * 
@@ -101,14 +118,14 @@ exports.postEditProduct = (req, res, next) => {
  */
 exports.getProducts = (request, response, next) => {
     Product.findAll()
-    .then(products => {
-      response.render('admin/products', {
-        prods: products,
-        pageTitle: 'Admin Products',
-        path: '/admin/products'
-      });
-    })
-    .catch(e =>
-      console.error(e.stack)
-    );
+        .then(products => {
+            response.render('admin/products', {
+                prods: products,
+                pageTitle: 'Admin Products',
+                path: '/admin/products'
+            });
+        })
+        .catch(e =>
+            console.error(e.stack)
+        );
 };
