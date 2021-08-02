@@ -9,32 +9,31 @@ const Cart = require('../models/cart')
  */
 exports.getProducts = (request, response, next) => {
 
-  Product.fetchAll()
-    .then((res) => {
-      console.log(res);
+  Product.findAll()
+    .then(products => {
       response.render('shop/product-list', {
-        prods: res.rows,
-        pageTitle: 'Shop - Product List (from DB)',
-        path: '/',
-        hasProducts: res.rows > 0,
+        prods: products,
+        pageTitle: 'Shop - Product List (Sequelize)',
+        path: '/products',
+        hasProducts: products > 0,
         activeShop: true,
         productCSS: true
       });
     })
     .catch(e =>
-      console.error(e.stack));
+      console.error(e.stack)
+    );
 };
 
 exports.getProduct = (request, response, next) => {
     const productId = request.params.productId;
     console.log('getProduct '+productId);
-    Product.findById(productId)
-    .then((res) => {
-      const product = res.rows[0];
-      console.log(product);
+
+    Product.findByPk(productId)
+    .then(product => {
       response.render('shop/product-detail', {
         product: product,
-        pageTitle: 'My Shop - '+ product.title,
+        pageTitle: 'My Shop (Sequelize) - '+ product.title,
         path: '/products'
       });
     })
@@ -50,17 +49,17 @@ exports.getProduct = (request, response, next) => {
  * @param {*} next 
  */
 exports.getIndex = (request, response, next) => {
-  Product.fetchAll()
-  .then(res => {
+  Product.findAll()
+  .then(products => {
     response.render('shop/index', {
-      prods: res.rows,
-      pageTitle: 'Shop Index (from Database)',
+      prods: products,
+      pageTitle: 'Shop Index (Sequelize)',
       path: '/'
-    });    
+    });
   })
   .catch(e => 
-    console.error(e.stack));
-
+    console.error(e.stack)
+  );
 };
 
 /**
