@@ -99,12 +99,16 @@ exports.postEditProduct = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.getProducts = (req, res, next) => {
-    Product.fetchAll(products => {
-        res.render('admin/products', {
-            prods: products,
-            pageTitle: 'Admin Products',
-            path: '/admin/products'
-          });
-    });
+exports.getProducts = (request, response, next) => {
+    Product.findAll()
+    .then(products => {
+      response.render('admin/products', {
+        prods: products,
+        pageTitle: 'Admin Products',
+        path: '/admin/products'
+      });
+    })
+    .catch(e =>
+      console.error(e.stack)
+    );
 };
