@@ -69,7 +69,26 @@ exports.getIndex = (request, response, next) => {
  * @param {*} next 
  */
 exports.getCart = (req, res, next) => {
-  const cartProducts = [];
+  req.user.getCart()
+    .then(cart => {
+      console.log(cart);
+      return cart.getProducts()
+        .then(products => {
+          res.render('shop/cart', {
+            path: '/cart',
+            pageTitle: 'Your Cart',
+            products: cartProducts
+          });
+        })
+        .catch(e =>
+          console.error(e.stack)
+        );
+    })
+    .catch(e =>
+      console.error(e.stack)
+    );
+
+  /*const cartProducts = [];
   Cart.getCart(cart => {
     if (cart && cart.products) {      
       Product.findAll()
@@ -99,7 +118,7 @@ exports.getCart = (req, res, next) => {
         products: cartProducts
       });
     }
-  });
+  });*/
 };
 
 

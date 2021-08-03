@@ -58,7 +58,7 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize.sync({ 
-    force: true,
+    //force: true,
     alter: true
 })
 .then(result => {    
@@ -72,6 +72,9 @@ sequelize.sync({
 })
 .then(user =>{
     console.log('Dummy User: ' + JSON.stringify(user));
+    return user.createCart();
+})
+.then(cart =>{
     app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 })
 .catch(err => {
