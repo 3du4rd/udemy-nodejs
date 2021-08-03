@@ -1,5 +1,5 @@
 const Product = require('../models/product')
-const Order = require('../models/order')
+//const Order = require('../models/order')
 
 /**
  * 
@@ -9,7 +9,7 @@ const Order = require('../models/order')
  */
 exports.getProducts = (request, response, next) => {
 
-  Product.findAll()
+  Product.fetchAll()
     .then(products => {
       response.render('shop/product-list', {
         prods: products,
@@ -49,11 +49,11 @@ exports.getProduct = (request, response, next) => {
  * @param {*} next 
  */
 exports.getIndex = (request, response, next) => {
-  Product.findAll()
+  Product.fetchAll()
   .then(products => {
     response.render('shop/index', {
       prods: products,
-      pageTitle: 'Shop Index (Sequelize)',
+      pageTitle: 'Shop Index - NoSQL with MongoDB',
       path: '/'
     });
   })
