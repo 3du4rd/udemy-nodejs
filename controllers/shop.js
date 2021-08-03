@@ -71,23 +71,26 @@ exports.getIndex = (request, response, next) => {
 exports.getCart = (req, res, next) => {
   const cartProducts = [];
   Cart.getCart(cart => {
-    if (cart && cart.products) {
-      Product.fetchAll(products => {
-        
-        for (product of products) {
-          const cartProductData = cart.products.find(
-            prod => prod.id === product.id
-          );
-          if (cartProductData) {
-            cartProducts.push({ productData: product, qty: cartProductData.qty });
+    if (cart && cart.products) {      
+      Product.findAll()
+        .then(products => {
+          for (product of products) {
+            const cartProductData = cart.products.find(
+              prod => prod.id === product.id
+            );
+            if (cartProductData) {
+              cartProducts.push({ productData: product, qty: cartProductData.qty });
+            }
           }
-        }
-        res.render('shop/cart', {
-          path: '/cart',
-          pageTitle: 'Your Cart',
-          products: cartProducts
-        });
-      });
+          res.render('shop/cart', {
+            path: '/cart',
+            pageTitle: 'Your Cart',
+            products: cartProducts
+          });
+        })
+        .catch(e =>
+          console.error(e.stack)
+        );
     }
     else {
       res.render('shop/cart', {

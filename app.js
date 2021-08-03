@@ -23,6 +23,19 @@ const apiRoutes = require('./routes/api');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'public')));
 
+/**
+ * Almacenar el usuario en todos los request de la aplicacion
+ */
+app.use((req,res,next) => {
+    User.findByPk(1)
+    .then(user => {
+        req.user = user;
+        next();
+    })
+    .catch(e =>
+        console.error(e.stack));
+});
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use('/api',apiRoutes.routes);
@@ -38,11 +51,19 @@ Product.belongsTo(User,{
 User.hasMany(Product);
 
 sequelize.sync({ 
-    alter: true,
-    force: true 
+    alter: true
 })
-.then(result => {
-    //console.log(result);
+.then(result => {    
+    return User.findByPk(1);    
+})
+.then(user =>{
+    if(!user){
+       return User.create({ name: 'Eduard', email: '3du4rd@gmail.com' }); 
+    }
+    return user;
+})
+.then(user =>{
+    console.log('Dummy User: ' + JSON.stringify(user));
     app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 })
 .catch(err => {
