@@ -3,7 +3,7 @@ const path = require('path');
 const express = require ('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database');
+const {mongoConnect} = require('./util/database');
  
 const PORT = process.env.PORT || 5000;
 
@@ -26,8 +26,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.use(errorController.get404);
 
-mongoConnect(client => {
-    console.log(client);
+mongoConnect( () => {    
     app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 });
 
