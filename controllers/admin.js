@@ -21,18 +21,20 @@ const Product = require('../models/product')
  * @param {*} next 
  */
 exports.postAddProduct = (request, response, next) => {
-    console.log(request.body);
+    console.log(request);
 
     const title = request.body.title;
     const imageUrl = request.body.imageUrl;
     const description = request.body.description;
     const price = request.body.price;
+    const userId = request.user.id;
 
     Product.create({
         title: title,
         price: price,
         imageUrl: imageUrl,
-        description: description
+        description: description,
+        userId: userId
     })
     .then(result=>{
         console.log(result);
