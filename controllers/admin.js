@@ -99,19 +99,14 @@ exports.postEditProduct = (req, res, next) => {
             console.error(e.stack));
 };
 
-/*
+
 exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-
-      Product.destroy({
-          where: { id: prodId }
-      }).then(result => {
-          console.log('Producto eliminado exitosamente!');
-          res.redirect('/admin/products');
-      }).catch(e =>
-              console.error(e.stack));    
-  };
-
-
-
-*/
+    Product.deleteById(prodId)
+    .then(() => {
+        console.log('Producto eliminado exitosamente!');
+        res.redirect('/admin/products');
+    })
+    .catch (e =>
+        console.error(e.stack));
+};
