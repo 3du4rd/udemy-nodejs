@@ -2,7 +2,8 @@ const Product = require('../models/product')
 //const Order = require('../models/order')
 
 /**
- * 
+ * Permite obtener todos los productos de la base de datos 
+ * MongoDB
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
@@ -25,11 +26,17 @@ exports.getProducts = (request, response, next) => {
     );
 };
 
+/**
+ * 
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 exports.getProduct = (request, response, next) => {
     const productId = request.params.productId;
     console.log('getProduct '+productId);
 
-    Product.findByPk(productId)
+    Product.findById(productId)
     .then(product => {
       response.render('shop/product-detail', {
         product: product,
