@@ -27,7 +27,7 @@ exports.postAddProduct = (request, response, next) => {
     const price = request.body.price;
     //const userId = request.user.id;
 
-    const product = new Product(title, price, description, imageUrl);
+    const product = new Product(title, price, description, imageUrl, null, request.user._id);
     product.save()
     .then(result=>{
         console.log('Producto creado: ' + result);
