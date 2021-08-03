@@ -36,7 +36,7 @@ exports.postAddProduct = (request, response, next) => {
     })
     .then(result=>{
         console.log(result);
-        response.redirect('/');
+        response.redirect('/admin/products');
     })
     .catch(err =>{
         console.error(err.stack);
@@ -90,11 +90,10 @@ exports.postEditProduct = (req, res, next) => {
         })
         .then(result => {
             console.log('Producto actualizado exitosamente!');
+            res.redirect('/admin/products');
         })
         .catch(e =>
             console.error(e.stack));
-            
-    res.redirect('/admin/products');
 };
 
   /**
@@ -105,8 +104,25 @@ exports.postEditProduct = (req, res, next) => {
    */
   exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.deleteById(prodId);
-    res.redirect('/admin/products');
+
+      Product.destroy({
+          where: { id: prodId }
+      }).then(result => {
+          console.log('Producto eliminado exitosamente!');
+          res.redirect('/admin/products');
+      }).catch(e =>
+              console.error(e.stack));
+
+    /*Product.findByPk(prodId)
+        .then(product => {            
+            return product.destroy();
+        })
+        .then(result => {
+            console.log('Producto eliminado exitosamente!');
+            res.redirect('/admin/products');
+        })
+        .catch(e =>
+            console.error(e.stack));*/
   };
 
 
