@@ -1,12 +1,17 @@
-const Pool = require('pg').Pool;
 require('dotenv').config();
+const Sequelize = require('sequelize');
 
-const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT
-});
+const user = process.env.PGUSER;
+const host = process.env.PGHOST;
+const database = process.env.PGDATABASE;
+const password = process.env.PGPASSWORD;
+const port = process.env.PGPORT;
 
-module.exports = pool;
+// Passing parameters separately (other dialects)
+const sequelize = new Sequelize(database, user, password, {
+    host: host,
+    port: port,
+    dialect: 'postgres' /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+  });
+
+module.exports = sequelize;
