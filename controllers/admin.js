@@ -21,23 +21,16 @@ const Product = require('../models/product')
  * @param {*} next 
  */
 exports.postAddProduct = (request, response, next) => {
-    console.log(request);
-
     const title = request.body.title;
     const imageUrl = request.body.imageUrl;
     const description = request.body.description;
     const price = request.body.price;
-    const userId = request.user.id;
+    //const userId = request.user.id;
 
-    Product.create({
-        title: title,
-        price: price,
-        imageUrl: imageUrl,
-        description: description,
-        userId: userId
-    })
+    const product = new Product(title, price, description, imageUrl);
+    product.save()
     .then(result=>{
-        console.log(result);
+        console.log('Producto creado: ' + result);
         response.redirect('/admin/products');
     })
     .catch(err =>{
@@ -45,13 +38,7 @@ exports.postAddProduct = (request, response, next) => {
     });
 };
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
+/*
 exports.getEditProduct = (req, res, next) => {
     const editMode = new Boolean(req.query.edit);
     if (!editMode){
@@ -98,12 +85,6 @@ exports.postEditProduct = (req, res, next) => {
             console.error(e.stack));
 };
 
-  /**
-   * 
-   * @param {*} req 
-   * @param {*} res 
-   * @param {*} next 
-   */
   exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
 
@@ -113,27 +94,10 @@ exports.postEditProduct = (req, res, next) => {
           console.log('Producto eliminado exitosamente!');
           res.redirect('/admin/products');
       }).catch(e =>
-              console.error(e.stack));
-
-    /*Product.findByPk(prodId)
-        .then(product => {            
-            return product.destroy();
-        })
-        .then(result => {
-            console.log('Producto eliminado exitosamente!');
-            res.redirect('/admin/products');
-        })
-        .catch(e =>
-            console.error(e.stack));*/
+              console.error(e.stack));    
   };
 
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
 exports.getProducts = (request, response, next) => {
     Product.findAll()
         .then(products => {
@@ -147,3 +111,4 @@ exports.getProducts = (request, response, next) => {
             console.error(e.stack)
         );
 };
+*/
