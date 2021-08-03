@@ -126,12 +126,28 @@ exports.postCart = (req, res, next) => {
     );  
 };
 
+/**
+ * Permite eliminar un producto del carrito de compras
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.postCartDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findById(prodId, product => {
-        Cart.deleteProduct(prodId, product.price);
-        res.redirect('/cart');
-    });
+    req.user.getCart()
+    .then(cart =>{
+      return cart.getProducts({ where: {id:prodId} });
+    })
+    .then(products => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then(result =>{
+      res.redirect('/cart');
+    })
+    .catch(e =>
+      console.error(e.stack)
+    );  
 };
 
 /**
