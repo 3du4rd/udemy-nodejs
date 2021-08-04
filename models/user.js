@@ -132,6 +132,8 @@ class User {
   }
 
   deleteItemFromCart(productId) {
+    console.log('Cart Items:');
+    console.log(this.cart.items);
     const updatedCartItems = this.cart.items.filter(item => {
       return item.productId.toString() !== productId.toString();
     });
@@ -139,7 +141,7 @@ class User {
     return db
       .collection('users')
       .updateOne(
-        { _id: new ObjectId(this._id) },
+        { _id: new mongodb.ObjectId(this._id) },
         { $set: { cart: { items: updatedCartItems } } }
       );
   }
