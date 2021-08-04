@@ -1,4 +1,4 @@
-const Product = require('../models/product')
+const Product = require('../models/product');
 
 /**
  * 
@@ -21,23 +21,16 @@ const Product = require('../models/product')
  * @param {*} next 
  */
 exports.postAddProduct = (request, response, next) => {
-    console.log(request);
-
     const title = request.body.title;
     const imageUrl = request.body.imageUrl;
     const description = request.body.description;
     const price = request.body.price;
-    const userId = request.user.id;
+    //const userId = request.user.id;
 
-    Product.create({
-        title: title,
-        price: price,
-        imageUrl: imageUrl,
-        description: description,
-        userId: userId
-    })
+    const product = new Product(title, price, description, imageUrl, null, request.user._id);
+    product.save()
     .then(result=>{
-        console.log(result);
+        console.log('Producto creado: ' + result);
         response.redirect('/admin/products');
     })
     .catch(err =>{
@@ -45,13 +38,21 @@ exports.postAddProduct = (request, response, next) => {
     });
 };
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
+exports.getProducts = (request, response, next) => {
+    Product.fetchAll()
+        .then(products => {
+            response.render('admin/products', {
+                prods: products,
+                pageTitle: 'Admin Products',
+                path: '/admin/products'
+            });
+        })
+        .catch(e =>
+            console.error(e.stack)
+        );
+};
+
+
 exports.getEditProduct = (req, res, next) => {
     const editMode = new Boolean(req.query.edit);
     if (!editMode){
@@ -59,7 +60,7 @@ exports.getEditProduct = (req, res, next) => {
     }
     const prodId = req.params.productId;
 
-    Product.findByPk(prodId)
+    Product.findById(prodId)
         .then(product => {
             if (!product) {
                 return res.redirect('/');
@@ -75,6 +76,12 @@ exports.getEditProduct = (req, res, next) => {
             console.error(e.stack));
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.postEditProduct = (req, res, next) => {
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
@@ -82,14 +89,8 @@ exports.postEditProduct = (req, res, next) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
 
-    Product.findByPk(prodId)
-        .then(product => {
-            product.title = updatedTitle;
-            product.price = updatedPrice;
-            product.imageUrl = updatedImageUrl;
-            product.description = updatedDesc;
-            return product.save();
-        })
+    const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedImageUrl, prodId);
+    product.save()
         .then(result => {
             console.log('Producto actualizado exitosamente!');
             res.redirect('/admin/products');
@@ -98,52 +99,14 @@ exports.postEditProduct = (req, res, next) => {
             console.error(e.stack));
 };
 
-  /**
-   * 
-   * @param {*} req 
-   * @param {*} res 
-   * @param {*} next 
-   */
-  exports.postDeleteProduct = (req, res, next) => {
+
+exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-
-      Product.destroy({
-          where: { id: prodId }
-      }).then(result => {
-          console.log('Producto eliminado exitosamente!');
-          res.redirect('/admin/products');
-      }).catch(e =>
-              console.error(e.stack));
-
-    /*Product.findByPk(prodId)
-        .then(product => {            
-            return product.destroy();
-        })
-        .then(result => {
-            console.log('Producto eliminado exitosamente!');
-            res.redirect('/admin/products');
-        })
-        .catch(e =>
-            console.error(e.stack));*/
-  };
-
-
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
-exports.getProducts = (request, response, next) => {
-    Product.findAll()
-        .then(products => {
-            response.render('admin/products', {
-                prods: products,
-                pageTitle: 'Admin Products',
-                path: '/admin/products'
-            });
-        })
-        .catch(e =>
-            console.error(e.stack)
-        );
+    Product.deleteById(prodId)
+    .then(() => {
+        console.log('Producto eliminado exitosamente!');
+        res.redirect('/admin/products');
+    })
+    .catch (e =>
+        console.error(e.stack));
 };

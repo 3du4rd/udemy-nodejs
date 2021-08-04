@@ -1,17 +1,35 @@
 require('dotenv').config();
-const Sequelize = require('sequelize');
+const { MongoClient } = require("mongodb");
 
-const user = process.env.PGUSER;
-const host = process.env.PGHOST;
-const database = process.env.PGDATABASE;
-const password = process.env.PGPASSWORD;
-const port = process.env.PGPORT;
+const username = encodeURIComponent(process.env.MONGODB_USER);
+const password = encodeURIComponent(process.env.MONGODB_PASSWORD);
+const clusterUrl = process.env.MONGODB_CLUSTERURL;
+const database = process.env.MONGODB_DATABASE;
 
-// Passing parameters separately (other dialects)
-const sequelize = new Sequelize(database, user, password, {
-    host: host,
-    port: port,
-    dialect: 'postgres' /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-  });
+const uri =
+  `mongodb+srv://${username}:${password}@${clusterUrl}/${database}?retryWrites=true&w=majority`;
 
-module.exports = sequelize;
+let _db;
+
+const mongoConnect = callback => {
+  MongoClient.connect(uri)
+    .then(client => {
+      console.log('Connected!');
+      _db = client.db();
+      callback();
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
+
+const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw 'No database found!';
+};
+
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
