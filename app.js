@@ -39,7 +39,11 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-    app.listen(PORT, () => console.log(`Listening on ${PORT}`));  
-});
+mongoConnect
+.then(result => {
+  app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+})
+.catch(err => {
+  console.log(err)
+});;
 
