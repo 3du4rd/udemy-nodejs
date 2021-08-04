@@ -153,7 +153,7 @@ class User {
         const order = {
           items: products,
           user: {
-            _id: new ObjectId(this._id),
+            _id: new mongodb.ObjectId(this._id),
             name: this.name
           }
         };
@@ -164,7 +164,7 @@ class User {
         return db
           .collection('users')
           .updateOne(
-            { _id: new ObjectId(this._id) },
+            { _id: new mongodb.ObjectId(this._id) },
             { $set: { cart: { items: [] } } }
           );
       });
