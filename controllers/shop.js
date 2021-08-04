@@ -129,10 +129,9 @@ exports.postOrder = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-/*
  exports.getOrders = (req, res, next) => {
   req.user
-    .getOrders({include: ['products']})
+    .getOrders()
     .then(orders => {
       res.render('shop/orders', {
         path: '/orders',
@@ -142,7 +141,7 @@ exports.postOrder = (req, res, next) => {
     })
     .catch(err => console.log(err));
 };
-*/
+
 /**
  * 
  * @param {*} req 
