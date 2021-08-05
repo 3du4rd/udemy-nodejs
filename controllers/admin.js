@@ -46,6 +46,8 @@ exports.postAddProduct = (request, response, next) => {
 
 exports.getProducts = (request, response, next) => {
     Product.find()
+        //.select('title price -_id')
+        //.populate('userId')
         .then(products => {
             response.render('admin/products', {
                 prods: products,
