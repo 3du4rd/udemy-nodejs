@@ -76,17 +76,19 @@ exports.getIndex = (request, response, next) => {
  * @param {*} next 
  */
 exports.getCart = (req, res, next) => {
-  req.user.getCart()
+  req.user
+    .populate('cart.items.productId')
+    .execPopulate()
     .then(products => {
-          res.render('shop/cart', {
-            path: '/cart',
-            pageTitle: 'Your Cart',
-            products: products
-          });                
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: products
+      });
     })
     .catch(e =>
       console.error(e.stack)
-    );  
+    );
 };
 
 exports.postCart = (req, res, next) => {
