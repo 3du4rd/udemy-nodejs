@@ -21,7 +21,10 @@ exports.postLogin = (req, res, next) => {
         console.log(user);
         req.session.isLoggedIn = true;
         req.session.user = user;
-        res.redirect('/');
+        req.session.save(err =>{
+          console.error(err);
+          res.redirect('/');
+        });        
       })
       .catch(err => {
           console.log('Usuario no encontrado');
