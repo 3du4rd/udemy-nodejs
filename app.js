@@ -4,13 +4,18 @@ const express = require ('express');
 const session = require ('express-session');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/error');
-const {mongoConnect} = require('./util/database');
+const {mongoConnect,mongoUri} = require('./util/database');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const User = require('./models/user'); 
  
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+const store = new MongoDBStore({
+  uri: mongoUri,
+  collection: 'sessions'
+});
 
 app.set('view engine','ejs');
 app.set('views','views');
@@ -24,7 +29,12 @@ const authRoutes = require('./routes/auth');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(
-  session({ secret: 'my secret', resave: false, saveUninitialized: false })
+  session({ 
+    secret: 'my secret', 
+    resave: false, 
+    saveUninitialized: false, 
+    store: store 
+  })
 );
 
 app.use((req, res, next) => {
