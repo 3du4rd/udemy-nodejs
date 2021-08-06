@@ -8,11 +8,11 @@ const Order = require('../models/order')
  * @param {*} res 
  * @param {*} next 
  */
-exports.getProducts = (request, response, next) => {
+exports.getProducts = (req, res, next) => {
 
   Product.find()
     .then(products => {
-      response.render('shop/product-list', {
+      res.render('shop/product-list', {
         prods: products,
         pageTitle: 'Shop - Product List (Sequelize)',
         path: '/products',
@@ -181,4 +181,3 @@ exports.getCheckout = (req, res, next) => {
         isAuthenticated: req.isLoggedIn
     });
 }
-
