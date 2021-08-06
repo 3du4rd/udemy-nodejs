@@ -11,7 +11,7 @@ const Product = require('../models/product');
         pageTitle: 'Add Product (Ejs)',
         path: '/admin/add-product',
         editing: false,
-        isAuthenticated: req.isLoggedIn        
+        isAuthenticated: req.session.isLoggedIn        
     });
 };
 
@@ -33,7 +33,7 @@ exports.postAddProduct = (request, response, next) => {
         price: price, 
         description: description, 
         imageUrl: imageUrl,
-        userId: request.user
+        userId: request.session.user
     });
     product.save()
     .then(result=>{
@@ -45,16 +45,16 @@ exports.postAddProduct = (request, response, next) => {
     });
 };
 
-exports.getProducts = (request, response, next) => {
+exports.getProducts = (req, res, next) => {
     Product.find()
         //.select('title price -_id')
         //.populate('userId')
         .then(products => {
-            response.render('admin/products', {
+            res.render('admin/products', {
                 prods: products,
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
-                isAuthenticated: req.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn 
             });
         })
         .catch(e =>
@@ -80,7 +80,7 @@ exports.getEditProduct = (req, res, next) => {
                 path: '/admin/edit-product',
                 editing: editMode,
                 product: product,
-                isAuthenticated: req.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn 
             });
         })
         .catch(e =>

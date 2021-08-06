@@ -19,7 +19,7 @@ exports.getProducts = (req, res, next) => {
         hasProducts: products > 0,
         activeShop: true,
         productCSS: true,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn 
       });
     })
     .catch(e =>
@@ -43,7 +43,7 @@ exports.getProduct = (req, res, next) => {
         product: product,
         pageTitle: 'My Shop (Sequelize) - '+ product.title,
         path: '/products',
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn 
       });
     })
     .catch(e =>
@@ -64,7 +64,7 @@ exports.getIndex = (req, res, next) => {
       prods: products,
       pageTitle: 'Shop Index - NoSQL with MongoDB',
       path: '/',
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn 
     });
   })
   .catch(e => 
@@ -88,7 +88,7 @@ exports.getCart = (req, res, next) => {
         path: '/cart',
         pageTitle: 'Your Cart',
         products: products,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(e =>
@@ -162,7 +162,7 @@ exports.postOrder = (req, res, next) => {
       path: '/orders',
       pageTitle: 'Your Orders',
       orders: orders,
-      isAuthenticated: req.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -178,6 +178,6 @@ exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
         path: '/checkout',
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
     });
 }
