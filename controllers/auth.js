@@ -20,26 +20,33 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  //res.setHeader('Set-Cookie','loggedIn=true; Max-Age=60; HttpOnly');
-  console.log(req.body.email + ' ' + req.body.password);
   const email = req.body.email;
   const password = req.body.password;
-  if (email) {
-    User.findById('610b576921367994107d617d')
+  User.findOne({ email: email })
       .then(user => {
-        console.log(user);
-        req.session.isLoggedIn = true;
-        req.session.user = user;
-        req.session.save(err =>{
+        if (!user){
+          return res.redirect('/login');
+        }
+        bcrypt.compare(password, user.password)
+        .then(doMatch =>{
+          if (doMatch){
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            return req.session.save(err =>{
+              console.error(err);
+              res.redirect('/');
+            });
+          }
+          res.redirect('/login');
+        })
+        .catch(err => {          
           console.error(err);
-          res.redirect('/');
         });        
       })
       .catch(err => {
           console.log('Usuario no encontrado');
           console.error(err);
-        });
-  }
+      });
 };
 
 exports.postSignup = (req, res, next) => {
