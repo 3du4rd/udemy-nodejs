@@ -7,12 +7,15 @@ const Product = require('../models/product');
  * @param {*} next 
  */
  exports.getAddProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        pageTitle: 'Add Product (Ejs)',
-        path: '/admin/add-product',
-        editing: false,
-        isAuthenticated: req.session.isLoggedIn        
-    });
+     if (!req.session.isLoggedIn) {
+         return res.redirect('/login');
+     }
+     res.render('admin/edit-product', {
+         pageTitle: 'Add Product (EJS)',
+         path: '/admin/add-product',
+         editing: false,
+         isAuthenticated: req.session.isLoggedIn
+     });
 };
 
 /**
