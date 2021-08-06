@@ -12,3 +12,4 @@ const uri =
 const mongoConnect = mongoose.connect(uri);
 
 exports.mongoConnect = mongoConnect;
+exports.mongoUri = uri;

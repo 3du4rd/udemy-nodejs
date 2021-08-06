@@ -8,17 +8,18 @@ const Order = require('../models/order')
  * @param {*} res 
  * @param {*} next 
  */
-exports.getProducts = (request, response, next) => {
+exports.getProducts = (req, res, next) => {
 
   Product.find()
     .then(products => {
-      response.render('shop/product-list', {
+      res.render('shop/product-list', {
         prods: products,
         pageTitle: 'Shop - Product List (Sequelize)',
         path: '/products',
         hasProducts: products > 0,
         activeShop: true,
-        productCSS: true
+        productCSS: true,
+        isAuthenticated: req.session.isLoggedIn 
       });
     })
     .catch(e =>
@@ -32,16 +33,17 @@ exports.getProducts = (request, response, next) => {
  * @param {*} response 
  * @param {*} next 
  */
-exports.getProduct = (request, response, next) => {
-    const productId = request.params.productId;
+exports.getProduct = (req, res, next) => {
+    const productId = req.params.productId;
     console.log('getProduct '+productId);
 
     Product.findById(productId)
     .then(product => {
-      response.render('shop/product-detail', {
+      res.render('shop/product-detail', {
         product: product,
         pageTitle: 'My Shop (Sequelize) - '+ product.title,
-        path: '/products'
+        path: '/products',
+        isAuthenticated: req.session.isLoggedIn 
       });
     })
     .catch(e =>
@@ -55,13 +57,14 @@ exports.getProduct = (request, response, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.getIndex = (request, response, next) => {
+exports.getIndex = (req, res, next) => {
   Product.find()
   .then(products => {
-    response.render('shop/index', {
+    res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop Index - NoSQL with MongoDB',
-      path: '/'
+      path: '/',
+      isAuthenticated: req.session.isLoggedIn 
     });
   })
   .catch(e => 
@@ -84,7 +87,8 @@ exports.getCart = (req, res, next) => {
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: products
+        products: products,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(e =>
@@ -157,7 +161,8 @@ exports.postOrder = (req, res, next) => {
     res.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
-      orders: orders
+      orders: orders,
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => console.log(err));
@@ -173,6 +178,6 @@ exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
         path: '/checkout',
+        isAuthenticated: req.session.isLoggedIn
     });
 }
-
