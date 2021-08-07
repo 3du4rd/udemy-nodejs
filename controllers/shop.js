@@ -18,8 +18,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
         hasProducts: products > 0,
         activeShop: true,
-        productCSS: true,
-        isAuthenticated: req.session.isLoggedIn 
+        productCSS: true
       });
     })
     .catch(e =>
@@ -42,8 +41,7 @@ exports.getProduct = (req, res, next) => {
       res.render('shop/product-detail', {
         product: product,
         pageTitle: 'My Shop (Sequelize) - '+ product.title,
-        path: '/products',
-        isAuthenticated: req.session.isLoggedIn 
+        path: '/products'
       });
     })
     .catch(e =>
@@ -86,8 +84,7 @@ exports.getCart = (req, res, next) => {
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: products,
-        isAuthenticated: req.session.isLoggedIn
+        products: products
       });
     })
     .catch(e =>
@@ -160,8 +157,7 @@ exports.postOrder = (req, res, next) => {
     res.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
-      orders: orders,
-      isAuthenticated: req.session.isLoggedIn
+      orders: orders
     });
   })
   .catch(err => console.log(err));
@@ -176,7 +172,6 @@ exports.postOrder = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
-        path: '/checkout',
-        isAuthenticated: req.session.isLoggedIn
+        path: '/checkout'
     });
 }
