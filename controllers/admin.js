@@ -7,12 +7,11 @@ const Product = require('../models/product');
  * @param {*} next 
  */
  exports.getAddProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        pageTitle: 'Add Product (Ejs)',
-        path: '/admin/add-product',
-        editing: false,
-        isAuthenticated: req.session.isLoggedIn        
-    });
+     res.render('admin/edit-product', {
+         pageTitle: 'Add Product (EJS)',
+         path: '/admin/add-product',
+         editing: false
+     });
 };
 
 /**
@@ -53,8 +52,7 @@ exports.getProducts = (req, res, next) => {
             res.render('admin/products', {
                 prods: products,
                 pageTitle: 'Admin Products',
-                path: '/admin/products',
-                isAuthenticated: req.session.isLoggedIn 
+                path: '/admin/products'
             });
         })
         .catch(e =>
@@ -79,8 +77,7 @@ exports.getEditProduct = (req, res, next) => {
                 pageTitle: 'Edit Product (Ejs)',
                 path: '/admin/edit-product',
                 editing: editMode,
-                product: product,
-                isAuthenticated: req.session.isLoggedIn 
+                product: product
             });
         })
         .catch(e =>

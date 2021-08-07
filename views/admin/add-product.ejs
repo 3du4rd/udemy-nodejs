@@ -25,6 +25,8 @@
                 <textarea name="description" id="description" rows="5"></textarea>
             </div>
 
+            <!-- CSRF Protection using csurf -->
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit">Add Product</button>
         </form>
     </main>
