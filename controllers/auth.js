@@ -1,4 +1,5 @@
 require('dotenv').config();
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const mailgun = require("mailgun-js");
 const User = require('../models/user'); 
@@ -129,5 +130,47 @@ exports.getReset = (req, res, next) => {
     path: '/reset',
     pageTitle: 'Reset Password',
     errorMessage: message
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (!user) {
+          req.flash('error', 'No account with that email found.');
+          return res.redirect('/reset');
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(result => {
+        res.redirect('/');
+
+        const mg = mailgun({ apiKey: process.env.MG_APIKEY, 
+                             domain: process.env.MG_DOMAIN
+        });
+
+        const data = {
+          from: 'NodeJS Shop <3du4rd@gmail.com>',
+          to: req.body.email,
+          subject: 'Password reset!',
+          text: `You requested a password reset ${token}`,
+          html: `<p>You requested a password reset</p>
+                 <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`
+        };
+        mg.messages().send(data, function (error, body) {
+          console.log(body);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   });
 };
