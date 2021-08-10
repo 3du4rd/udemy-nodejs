@@ -163,7 +163,7 @@ exports.postReset = (req, res, next) => {
           subject: 'Password reset!',
           text: `You requested a password reset ${token}`,
           html: `<p>You requested a password reset</p>
-                 <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`
+                 <p>Click this <a href="${process.env.URL_PWD_RESET}/${token}">link</a> to set a new password.</p>`
         };
         mg.messages().send(data, function (error, body) {
           console.log(body);
