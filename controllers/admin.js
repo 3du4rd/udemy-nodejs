@@ -45,7 +45,7 @@ exports.postAddProduct = (request, response, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-    Product.find()
+    Product.find({ userId: req.user._id })
         //.select('title price -_id')
         //.populate('userId')
         .then(products => {
