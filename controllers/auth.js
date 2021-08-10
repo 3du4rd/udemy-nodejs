@@ -1,5 +1,9 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
+const nodemailer = require("nodemailer");
 const User = require('../models/user'); 
+
+//sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -84,7 +88,37 @@ exports.postSignup = (req, res, next) => {
           return user.save();
         })
         .then(result => {
+
           res.redirect('/login');
+
+          // create reusable transporter object using the default SMTP transport
+          let transporter = nodemailer.createTransport({
+            host: process.env.SMTP_SERVER,
+            port: process.env.SMTP_PORT,
+            secure: true, // true for 465, false for other ports
+            auth: {
+              user: process.env.SMTP_USER, // generated ethereal user
+              pass: process.env.SMTP_PASSWORD // generated ethereal password
+            },
+          });
+
+          // send mail with defined transport object
+          transporter.sendMail({
+            from: '3du4rd@gmail.com', // sender address
+            to: email, // list of receivers
+            subject: "SignUp Success ✔", // Subject line
+            text: "Welcome to my Shop?", // plain text body
+            html: "<b>Welcome to my Shop?</b>", // html body
+          })
+          .then(result => {
+            console.log("Message sent: %s", result.messageId);
+          })
+          .catch(err =>{
+            console.error(err);
+          });               
+        })
+        .catch(err => {
+            console.log(err);
         });
     })    
     .catch(err => {

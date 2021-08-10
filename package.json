@@ -27,6 +27,7 @@
     "express-session": "^1.17.2",
     "mongodb": "^4.0.1",
     "mongoose": "^5.13.5",
+    "nodemailer": "^6.6.3",
     "pg": "^8.7.1",
     "pug": "^3.0.2",
     "sequelize": "^6.6.5"
