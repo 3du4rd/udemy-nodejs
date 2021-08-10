@@ -1,4 +1,6 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
+const mailgun = require("mailgun-js");
 const User = require('../models/user'); 
 
 exports.getLogin = (req, res, next) => {
@@ -84,9 +86,26 @@ exports.postSignup = (req, res, next) => {
           return user.save();
         })
         .then(result => {
+
           res.redirect('/login');
+
+          const mg = mailgun({ apiKey: process.env.MG_APIKEY, 
+                               domain: process.env.MG_DOMAIN });
+          const data = {
+            from: 'NodeJS Shop <3du4rd@gmail.com>',
+            to: email,
+            subject: 'SignUp Success!',
+            text: 'Welcome to my store!'
+          };
+          mg.messages().send(data, function (error, body) {
+            console.log(body);
+          });
+
+        })    
+        .catch(err => {
+          console.log(err);
         });
-    })    
+    })
     .catch(err => {
       console.log(err);
     });
