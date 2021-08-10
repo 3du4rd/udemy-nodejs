@@ -72,7 +72,6 @@ exports.postSignup = (req, res, next) => {
   //TODO 1. Validate inputs
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -82,41 +81,31 @@ exports.postSignup = (req, res, next) => {
       errorMessage: errors.array()[0].msg
     });
   }
-  User.findOne({ email: email })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error','Email exists already, please pick a different one');
-        return res.redirect('/signup');
-      }
-      return bcrypt.hash(password, 12)
-        .then(hashedPassword => {
-          const user = new User({
-            email: email,
-            password: hashedPassword,
-            cart: { items: [] }
-          });
-          return user.save();
-        })
-        .then(result => {
+  bcrypt.hash(password, 12)
+    .then(hashedPassword => {
+      const user = new User({
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] }
+      });
+      return user.save();
+    })
+    .then(result => {
+      res.redirect('/login');
+      const mg = mailgun({
+        apiKey: process.env.MG_APIKEY,
+        domain: process.env.MG_DOMAIN
+      });
+      const data = {
+        from: 'NodeJS Shop <3du4rd@gmail.com>',
+        to: email,
+        subject: 'SignUp Success!',
+        text: 'Welcome to my store!'
+      };
+      mg.messages().send(data, function (error, body) {
+        console.log(body);
+      });
 
-          res.redirect('/login');
-
-          const mg = mailgun({ apiKey: process.env.MG_APIKEY, 
-                               domain: process.env.MG_DOMAIN });
-          const data = {
-            from: 'NodeJS Shop <3du4rd@gmail.com>',
-            to: email,
-            subject: 'SignUp Success!',
-            text: 'Welcome to my store!'
-          };
-          mg.messages().send(data, function (error, body) {
-            console.log(body);
-          });
-
-        })    
-        .catch(err => {
-          console.log(err);
-        });
     })
     .catch(err => {
       console.log(err);
