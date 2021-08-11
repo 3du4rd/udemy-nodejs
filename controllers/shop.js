@@ -21,9 +21,11 @@ exports.getProducts = (req, res, next) => {
         productCSS: true
       });
     })
-    .catch(e =>
-      console.error(e.stack)
-    );
+    .catch(err =>{
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+   });
 };
 
 /**
@@ -44,8 +46,11 @@ exports.getProduct = (req, res, next) => {
         path: '/products'
       });
     })
-    .catch(e =>
-      console.error(e.stack));
+    .catch(err =>{
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -64,9 +69,11 @@ exports.getIndex = (req, res, next) => {
       path: '/'
     });
   })
-  .catch(e => 
-    console.error(e.stack)
-  );
+  .catch(err =>{
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 /**
@@ -87,9 +94,11 @@ exports.getCart = (req, res, next) => {
         products: products
       });
     })
-    .catch(e =>
-      console.error(e.stack)
-    );
+    .catch(err =>{
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postCart = (req, res, next) => {
@@ -117,9 +126,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .then(result =>{
       res.redirect('/cart');
     })
-    .catch(e =>
-      console.error(e.stack)
-    );  
+    .catch(err =>{
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });  
 };
 
 
@@ -146,8 +157,10 @@ exports.postOrder = (req, res, next) => {
     .then(() => {
       res.redirect('/orders');
     })       
-    .catch(err => { 
-      console.log(err)
+    .catch(err =>{
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -160,7 +173,11 @@ exports.postOrder = (req, res, next) => {
       orders: orders
     });
   })
-  .catch(err => console.log(err));
+  .catch(err =>{
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 /**
