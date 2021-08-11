@@ -64,6 +64,7 @@ exports.postAddProduct = (req, res, next) => {
     })
     .catch(err =>{
         console.error(err.stack);
+        res.redirect('/500');
     });
 };
 

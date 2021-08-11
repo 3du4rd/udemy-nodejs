@@ -69,6 +69,7 @@ app.use(authRoutes);
 
 // app.use('/api',apiRoutes.routes);
 
+app.use('/500',errorController.get500);
 app.use(errorController.get404);
 
 mongoConnect

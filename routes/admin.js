@@ -26,6 +26,7 @@ router.post(
           if (value<1000000){
             return Promise.reject('Price must be greater than 1M');
           }
+          return true;
       }),
       body('description')
         .isLength({ min: 5, max: 400 })
