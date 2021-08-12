@@ -67,7 +67,7 @@ exports.getProduct = (req, res, next) => {
  * @param {*} next 
  */
 exports.getIndex = (req, res, next) => {
-  const page = req.query.page;
+  const page = +req.query.page || 1;
   let totalItems;
 
   Product.find()
@@ -83,7 +83,7 @@ exports.getIndex = (req, res, next) => {
       prods: products,
       pageTitle: 'Shop Index - NoSQL with MongoDB',
       path: '/',
-      totalProducts: totalItems,
+      currentPage: page,
       hasNextPage: ITEMS_PER_PAGE * page < totalItems,
       hasPreviousPage: page > 1,
       nextPage: page + 1,
