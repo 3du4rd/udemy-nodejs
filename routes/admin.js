@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 
 const adminController = require('../controllers/admin');
 const isAuth = require('../middleware/is-auth');
@@ -21,7 +21,6 @@ router.post(
         .isString()
         .isLength({ min: 3 })
         .trim(),
-      body('imageUrl').isURL(),
       body('price').isFloat().custom(value => { 
           if (value<1000000){
             return Promise.reject('Price must be greater than 1M');
@@ -47,8 +46,12 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl').isURL(),
-    body('price').isFloat(),
+    body('price').isFloat().custom(value => { 
+      if (value<1000000){
+        return Promise.reject('Product Price must be greater than $1000000');
+      }
+      return true;
+    }),
     body('description')
       .isLength({ min: 5, max: 400 })
       .trim()
