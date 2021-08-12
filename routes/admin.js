@@ -22,7 +22,7 @@ router.post(
         .isLength({ min: 3 })
         .trim(),
       body('price').isFloat().custom(value => { 
-          if (value<1000000){
+          if (value<10){
             return Promise.reject('Price must be greater than 1M');
           }
           return true;
@@ -47,7 +47,7 @@ router.post(
       .isLength({ min: 3 })
       .trim(),
     body('price').isFloat().custom(value => { 
-      if (value<1000000){
+      if (value<10){
         return Promise.reject('Product Price must be greater than $1000000');
       }
       return true;
