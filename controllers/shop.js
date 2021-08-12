@@ -5,6 +5,8 @@ const PDFDocument = require('pdfkit');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const ITEMS_PER_PAGE = 3;
+
 /**
  * Permite obtener todos los productos de la base de datos 
  * MongoDB
@@ -65,7 +67,11 @@ exports.getProduct = (req, res, next) => {
  * @param {*} next 
  */
 exports.getIndex = (req, res, next) => {
+  const page = req.query.page;
+
   Product.find()
+  .skip((page - 1) * ITEMS_PER_PAGE)
+  .limit(ITEMS_PER_PAGE)
   .then(products => {
     res.render('shop/index', {
       prods: products,
