@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require ('express');
 const session = require ('express-session');
@@ -55,7 +56,6 @@ app.set('views','views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
-// const apiRoutes = require('./routes/api');
 
 //app.use(bodyParser.urlencoded({extended: false}));
 app.use(multer({ 
