@@ -130,5 +130,7 @@ temp/
 
 images/
 *.pdf
+*.key
+*.cert
 
 # End of https://www.toptal.com/developers/gitignore/api/node

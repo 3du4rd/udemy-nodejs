@@ -1,6 +1,8 @@
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
+
 const express = require ('express');
 const session = require ('express-session');
 const bodyParser = require('body-parser');
@@ -18,6 +20,10 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const User = require('./models/user'); 
  
 const PORT = process.env.PORT || 5000;
+
+//-> Archivos requeridos para activar SSL/TLS Protocol
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert');
 
 const app = express();
 
@@ -136,6 +142,9 @@ app.use((error, req, res, next) => {
 
 mongoConnect
 .then(result => {
+  // https
+  //   .createServer({ key: privateKey, cert: certificate }, app)
+  //   .listen(PORT, () => console.log(`Listening on ${PORT}`));
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 })
 .catch(err => {
