@@ -22,8 +22,8 @@ const User = require('./models/user');
 const PORT = process.env.PORT || 5000;
 
 //-> Archivos requeridos para activar SSL/TLS Protocol
-const privateKey = fs.readFileSync('server.key');
-const certificate = fs.readFileSync('server.cert');
+//const privateKey = fs.readFileSync('server.key');
+//const certificate = fs.readFileSync('server.cert');
 
 const app = express();
 
@@ -129,8 +129,6 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-
-// app.use('/api',apiRoutes.routes);
 
 app.use('/500', errorController.get500);
 app.use(errorController.get404);
