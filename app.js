@@ -1,10 +1,17 @@
+require('dotenv').config();
 const path = require('path');
+const fs = require('fs');
+const https = require('https');
+
 const express = require ('express');
 const session = require ('express-session');
 const bodyParser = require('body-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
+const helmet = require("helmet");
+const compression = require('compression');
+const morgan = require('morgan');
 
 const errorController = require('./controllers/error');
 const { mongoConnect,mongoUri } = require('./util/database');
@@ -14,7 +21,29 @@ const User = require('./models/user');
  
 const PORT = process.env.PORT || 5000;
 
+//-> Archivos requeridos para activar SSL/TLS Protocol
+//const privateKey = fs.readFileSync('server.key');
+//const certificate = fs.readFileSync('server.cert');
+
 const app = express();
+
+//-> Middleware para asegurar la App con la Activación de Headers de seguridad:
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Se requiere para permitir la descarga de imagenes del CDN
+  })
+);
+
+//-> Middleware para compresion de assets (con gzip)
+app.use(compression());
+
+
+//-> Middleware para Log Trace
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' }
+);
+app.use(morgan('combined', { stream: accessLogStream }));
 
 //-> Usado para guardar las sesiones de usuario (ExpressSession)
 const store = new MongoDBStore({
@@ -55,7 +84,6 @@ app.set('views','views');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
-// const apiRoutes = require('./routes/api');
 
 //app.use(bodyParser.urlencoded({extended: false}));
 app.use(multer({ 
@@ -102,8 +130,6 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-// app.use('/api',apiRoutes.routes);
-
 app.use('/500', errorController.get500);
 app.use(errorController.get404);
 app.use((error, req, res, next) => {
@@ -114,6 +140,9 @@ app.use((error, req, res, next) => {
 
 mongoConnect
 .then(result => {
+  // https
+  //   .createServer({ key: privateKey, cert: certificate }, app)
+  //   .listen(PORT, () => console.log(`Listening on ${PORT}`));
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 })
 .catch(err => {
