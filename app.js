@@ -7,6 +7,7 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
 const helmet = require("helmet");
+const compression = require('compression');
 
 const errorController = require('./controllers/error');
 const { mongoConnect,mongoUri } = require('./util/database');
@@ -18,12 +19,15 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-//-> Asegurar la App con la Activación de Headers de seguridad:
+//-> Middleware para asegurar la App con la Activación de Headers de seguridad:
 app.use(
   helmet({
     contentSecurityPolicy: false, // Se requiere para permitir la descarga de imagenes del CDN
   })
 );
+
+//-> Middleware para compresion de assets (con gzip)
+app.use(compression());
 
 //-> Usado para guardar las sesiones de usuario (ExpressSession)
 const store = new MongoDBStore({
